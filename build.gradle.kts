@@ -1,3 +1,4 @@
+import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
@@ -38,12 +39,21 @@ kotlin {
 
 benchmark {
     targets {
-        register("jvm")
+        register("jvm") {
+            this as JvmBenchmarkTarget
+            jmhVersion = "1.37"
+        }
         register("macosArm64")
         register("macosX64")
         register("linuxX64")
         register("js")
         register("wasmJs")
+    }
+
+    configurations {
+        named("main") {
+            advanced("jvmForks", 3)
+        }
     }
 }
 

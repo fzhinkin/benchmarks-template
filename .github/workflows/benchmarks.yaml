@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  jvm:
+  jvm-linux-x86:
     #if: false
     runs-on: ubuntu-latest
 
@@ -18,15 +18,14 @@ jobs:
           distribution: 'liberica'
           architecture: x64
 
-      - name: Build benchmarks
-        run: ./gradlew jvmBenchmarkJar
-
       - name: Run benchmarks
+        run: ./gradlew jvmBenchmark
+
+      - name: Copy results
         run: |
-          OUT_FILE_NAME=$(date "+%Y-%m-%dT%H%M%S-linux-x64-"$(git rev-parse --short HEAD)".json")
-          JAR_NAME=$(ls ./build/benchmarks/jvm/jars/*-JMH.jar | head -n1)
-          test -d results || mkdir results
-          java -jar $JAR_NAME -foe=true -rf json -rff results/$OUT_FILE_NAME
+          REPORTS_DIR=build/reports/benchmarks/main
+          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
         uses: peter-evans/create-pull-request@v5
@@ -58,8 +57,7 @@ jobs:
 
       - name: Copy results
         run: |
-          find build/reports
-          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
@@ -93,8 +91,7 @@ jobs:
 
       - name: Copy results
         run: |
-          find build/reports
-          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
@@ -128,8 +125,7 @@ jobs:
 
       - name: Copy results
         run: |
-          find build/reports
-          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
@@ -163,8 +159,7 @@ jobs:
 
       - name: Copy results
         run: |
-          find build/reports
-          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
@@ -198,8 +193,7 @@ jobs:
 
       - name: Copy results
         run: |
-          find build/reports
-          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
