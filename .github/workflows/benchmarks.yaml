@@ -1,0 +1,209 @@
+name: Benchmarks
+on:
+  workflow_dispatch:
+
+jobs:
+  jvm:
+    #if: false
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          java-version: '21'
+          distribution: 'liberica'
+          architecture: x64
+
+      - name: Build benchmarks
+        run: ./gradlew mainBenchmarkJar
+
+      - name: Run benchmarks
+        run: |
+          OUT_FILE_NAME=$(date "+%Y-%m-%dT%H%M%S-linux-x64-"$(git rev-parse --short HEAD)".json")
+          test -d results || mkdir results
+          java -jar ./jvm-benchmarks/build/benchmarks/main/jars/jvm-benchmarks-main-jmh-JMH.jar -f2 -rf json -tu ns -bm avgt -rff results/$OUT_FILE_NAME
+
+      - name: Publish results
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.TOKEN }}
+          add-paths: results/*.json
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: results-${{ github.job }}
+          title: 'Benchmarking report'
+
+  native-linux-x86:
+    #if: false
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          java-version: '21'
+          distribution: 'liberica'
+          architecture: x64
+
+      - name: Run benchmarks
+        run: ./gradlew linuxX64Benchmark
+
+      - name: Copy results
+        run: |
+          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+
+      - name: Publish results
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.TOKEN }}
+          add-paths: results/*.json
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: results-${{ github.job }}
+          title: 'Benchmarking report'
+
+  native-macos-x86:
+    #if: false
+    runs-on: macos-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          java-version: '21'
+          distribution: 'liberica'
+          architecture: x64
+
+      - name: Run benchmarks
+        run: ./gradlew macosX64Benchmark
+
+      - name: Copy results
+        run: |
+          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+
+      - name: Publish results
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.TOKEN }}
+          add-paths: results/*.json
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: results-${{ github.job }}
+          title: 'Benchmarking report'
+
+  native-macos-arm64:
+    #if: false
+    runs-on: macos-14
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          java-version: '21'
+          distribution: 'liberica'
+          architecture: arm64
+
+      - name: Run benchmarks
+        run: ./gradlew macosArm64Benchmark wasmJsBenchmark jsBenchmark
+
+      - name: Copy results
+        run: |
+          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+
+      - name: Publish results
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.TOKEN }}
+          add-paths: results/*.json
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: results-${{ github.job }}
+          title: 'Benchmarking report'
+
+  js:
+    #if: false
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          java-version: '21'
+          distribution: 'liberica'
+          architecture: X64
+
+      - name: Run benchmarks
+        run: ./gradlew jsBenchmark
+
+      - name: Copy results
+        run: |
+          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+
+      - name: Publish results
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.TOKEN }}
+          add-paths: results/*.json
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: results-${{ github.job }}
+          title: 'Benchmarking report'
+
+  wasmJs:
+    #if: false
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4.0.0
+        with:
+          java-version: '21'
+          distribution: 'liberica'
+          architecture: X64
+
+      - name: Run benchmarks
+        run: ./gradlew wasmJsBenchmark
+
+      - name: Copy results
+        run: |
+          REPORTS_DIR=kmp-benchmarks/build/reports/benchmarks/main/
+          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+
+      - name: Publish results
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.TOKEN }}
+          add-paths: results/*.json
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: results-${{ github.job }}
+          title: 'Benchmarking report'
