@@ -25,6 +25,7 @@ jobs:
         run: |
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          mkdir -p results
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
@@ -59,6 +60,7 @@ jobs:
         run: |
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          mkdir -p results
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
@@ -93,6 +95,7 @@ jobs:
         run: |
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          mkdir -p results
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
@@ -127,6 +130,7 @@ jobs:
         run: |
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          mkdir -p results
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
@@ -161,6 +165,7 @@ jobs:
         run: |
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          mkdir -p results
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
@@ -195,6 +200,7 @@ jobs:
         run: |
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          mkdir -p results
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
