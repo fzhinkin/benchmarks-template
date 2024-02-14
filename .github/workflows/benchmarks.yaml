@@ -19,7 +19,7 @@ jobs:
           architecture: x64
 
       - name: Build benchmarks
-        run: ./gradlew mainBenchmarkJar
+        run: ./gradlew jvmBenchmarkJar
 
       - name: Run benchmarks
         run: |
@@ -152,7 +152,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'liberica'
-          architecture: X64
+          architecture: x64
 
       - name: Run benchmarks
         run: ./gradlew jsBenchmark
@@ -186,7 +186,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'liberica'
-          architecture: X64
+          architecture: x64
 
       - name: Run benchmarks
         run: ./gradlew wasmJsBenchmark
