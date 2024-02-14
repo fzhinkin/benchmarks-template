@@ -24,8 +24,9 @@ jobs:
       - name: Run benchmarks
         run: |
           OUT_FILE_NAME=$(date "+%Y-%m-%dT%H%M%S-linux-x64-"$(git rev-parse --short HEAD)".json")
+          JAR_NAME=$(ls ./build/benchmarks/jvm/jars/*-JMH.jar | head -n1)
           test -d results || mkdir results
-          java -jar ./jvm-benchmarks/build/benchmarks/main/jars/jvm-benchmarks-main-jmh-JMH.jar -f2 -rf json -tu ns -bm avgt -rff results/$OUT_FILE_NAME
+          java -jar $JAR_NAME -foe=true -rf json -rff results/$OUT_FILE_NAME
 
       - name: Publish results
         uses: peter-evans/create-pull-request@v5
