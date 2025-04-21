@@ -21,7 +21,7 @@ jobs:
 
       - name: Cleanup
         run: |
-          sed 's/kotlinx-benchmark-kmp-template/${{ github.event.repository.name }}/g' settings.gradle.kts
+          sed -i 's/kotlinx-benchmark-kmp-template/${{ github.event.repository.name }}/g' settings.gradle.kts
           rm .github/workflows/template-cleanup.yaml
 
       - name: Commit files
