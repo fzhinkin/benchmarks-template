@@ -1,9 +1,8 @@
-import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    kotlin("multiplatform") version "2.1.20"
-    id("org.jetbrains.kotlinx.benchmark") version "0.4.13"
+    kotlin("multiplatform") version "2.2.20"
+    id("org.jetbrains.kotlinx.benchmark") version "0.4.14"
 }
 
 group = "org.example"
@@ -29,7 +28,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.13")
+                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.14")
             }
         }
     }
@@ -37,10 +36,7 @@ kotlin {
 
 benchmark {
     targets {
-        register("jvm") {
-            this as JvmBenchmarkTarget
-            jmhVersion = "1.37"
-        }
+        register("jvm")
         register("macosArm64")
         register("macosX64")
         register("linuxX64")
