@@ -6,7 +6,9 @@ jobs:
   jvm-linux-x86:
     #if: false
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -26,12 +28,11 @@ jobs:
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           mkdir -p results
-          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-jvm-$arch_name; done
 
       - name: Publish results
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.TOKEN }}
           add-paths: results/*.json
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
@@ -42,6 +43,9 @@ jobs:
   native-linux-x86:
     #if: false
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -64,44 +68,8 @@ jobs:
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.TOKEN }}
-          add-paths: results/*.json
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          signoff: false
-          branch: results-${{ github.job }}
-          title: 'Benchmarking report'
-
-  native-macos-x86:
-    #if: false
-    runs-on: macos-latest
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      - name: Setup JDK
-        uses: actions/setup-java@v4.0.0
-        with:
-          java-version: '21'
-          distribution: 'liberica'
-          architecture: x64
-
-      - name: Run benchmarks
-        run: ./gradlew macosX64Benchmark
-
-      - name: Copy results
-        run: |
-          REPORTS_DIR=build/reports/benchmarks/main
-          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
-          mkdir -p results
-          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
-
-      - name: Publish results
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.TOKEN }}
           add-paths: results/*.json
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
@@ -111,7 +79,10 @@ jobs:
 
   native-macos-arm64:
     #if: false
-    runs-on: macos-14
+    runs-on: macos-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -124,7 +95,7 @@ jobs:
           architecture: arm64
 
       - name: Run benchmarks
-        run: ./gradlew macosArm64Benchmark wasmJsBenchmark jsBenchmark
+        run: ./gradlew macosArm64Benchmark
 
       - name: Copy results
         run: |
@@ -134,9 +105,8 @@ jobs:
           ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.TOKEN }}
           add-paths: results/*.json
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
@@ -147,6 +117,9 @@ jobs:
   js:
     #if: false
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -166,12 +139,11 @@ jobs:
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           mkdir -p results
-          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-js-$arch_name; done
 
       - name: Publish results
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.TOKEN }}
           add-paths: results/*.json
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
@@ -182,6 +154,9 @@ jobs:
   wasmJs:
     #if: false
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -201,12 +176,11 @@ jobs:
           REPORTS_DIR=build/reports/benchmarks/main
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           mkdir -p results
-          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-wasmjs-$arch_name; done
 
       - name: Publish results
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.TOKEN }}
           add-paths: results/*.json
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
