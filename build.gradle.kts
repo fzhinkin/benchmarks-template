@@ -23,6 +23,8 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs { nodejs() }
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmWasi { nodejs() }
     js(IR) { nodejs() }
 
     sourceSets {
@@ -42,6 +44,7 @@ benchmark {
         register("linuxX64")
         register("js")
         register("wasmJs")
+        register("wasmWasi")
     }
 
     configurations {
