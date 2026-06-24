@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    kotlin("multiplatform") version "2.2.20"
-    id("org.jetbrains.kotlinx.benchmark") version "0.4.14"
+    kotlin("multiplatform") version "2.4.0"
+    id("org.jetbrains.kotlinx.benchmark") version "0.4.17"
 }
 
 group = "org.example"
@@ -28,7 +28,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.14")
+                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.17")
             }
         }
     }
