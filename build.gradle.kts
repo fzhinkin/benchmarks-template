@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    kotlin("multiplatform") version "2.4.0"
-    id("org.jetbrains.kotlinx.benchmark") version "0.4.17"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlinx.benchmark)
 }
 
 group = "org.example"
@@ -13,24 +13,23 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(libs.versions.jvm.toolchain.get().toInt())
 
     jvm()
 
     macosArm64()
-    macosX64()
     linuxX64()
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs { nodejs() }
     @OptIn(ExperimentalWasmDsl::class)
     wasmWasi { nodejs() }
-    js(IR) { nodejs() }
+    js { nodejs() }
 
     sourceSets {
         commonMain {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.17")
+                implementation(libs.kotlinx.benchmark.runtime)
             }
         }
     }
@@ -40,7 +39,6 @@ benchmark {
     targets {
         register("jvm")
         register("macosArm64")
-        register("macosX64")
         register("linuxX64")
         register("js")
         register("wasmJs")

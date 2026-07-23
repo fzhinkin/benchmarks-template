@@ -1,0 +1,11 @@
+[versions]
+kotlin = "2.4.0"
+benchmark = "0.4.17"
+jvm-toolchain = "21"
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark"}
+
+[libraries]
+kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
