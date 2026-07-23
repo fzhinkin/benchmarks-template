@@ -24,6 +24,26 @@ jobs:
           sed -i 's/kotlinx-benchmark-kmp-template/${{ github.event.repository.name }}/g' settings.gradle.kts
           rm .github/workflows/template-cleanup.yaml
 
+      - name: Get Latest Kotlin Version
+        id: kotlin_version
+        uses: dvershinin/lastversion-action@main
+        with:
+          repository: https://github.com/JetBrains/kotlin
+          action: get
+
+      - name: Get Latest kotlinx-benchmark Version
+        id: benchmark_version
+        uses: dvershinin/lastversion-action@main
+        with:
+          repository: https://github.com/kotlin/kotlinx-benchmark
+          action: get
+
+      - name: Update versions
+        run: |
+          sed -i 's/kotlin = ".*"/kotlin = "${{ steps.kotlin_version.outputs.last_version }}"/' \
+                 's/benchmark = ".*"/benchmark = "${{ steps.benchmark_version.outputs.last_version }}"/' \
+                 libs.versions.toml
+
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
